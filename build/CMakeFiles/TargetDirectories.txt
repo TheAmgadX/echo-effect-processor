@@ -1,0 +1,3 @@
+/home/aj_e/Programming_Codes/C++/Echo_Effect_Project/build/CMakeFiles/echo_processor.dir
+/home/aj_e/Programming_Codes/C++/Echo_Effect_Project/build/CMakeFiles/edit_cache.dir
+/home/aj_e/Programming_Codes/C++/Echo_Effect_Project/build/CMakeFiles/rebuild_cache.dir
