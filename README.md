@@ -123,3 +123,7 @@ This project pushed me out of my comfort zone — and that’s exactly why I enj
 Learning new things, debugging tricky parts, and seeing the performance improvements was super rewarding.
 
 Thanks for checking it out!
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
