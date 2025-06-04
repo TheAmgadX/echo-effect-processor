@@ -76,6 +76,35 @@ You need **C++** and **CMake** installed.
 
 Check out the `scripts/performance_comparison.png` to see how much faster the SIMD version is compared to the naive implementation. You can also run the `generate_plots.py` script to regenerate the plot.
 
+## Execution Times by File Size
+
+| File Size (MB) | Naive (s) | Loop Unrolled (s) | SIMD (s) | SIMD + Threads (s) |
+|----------------|-----------|-------------------|----------|--------------------|
+| 0.33           | 0.0126    | 0.0059           | 0.0029   | 0.0042            |
+| 7.92           | 0.1260    | 0.1311           | 0.0689   | 0.0712            |
+| 60.07          | 0.9350    | 0.9576           | 0.5235   | 0.4142            |
+| 413.98         | 7.1689    | 6.2748           | 3.6339   | 2.7911            |
+| 2,046.07       | 33.5623   | 30.7633          | 18.4324  | 14.1682           |
+
+## Total Performance Summary
+
+| Approach | Total Time (s) | Speedup vs Naive |
+|----------|----------------|------------------|
+| Naive | 41.79 | 1.00x |
+| Loop Unrolled | 37.99 | 1.10x |
+| SIMD | 22.66 | 1.84x |
+| SIMD + Multithreading | 17.52 | 2.38x |
+
+## Speedup Comparison by File Size
+
+| File Size (MB) | Loop Unrolled vs Naive | SIMD vs Naive | SIMD + Threads vs Naive |
+|----------------|------------------------|---------------|-------------------------|
+| 0.33           | 2.14x                 | 4.34x         | 3.00x                   |
+| 7.92           | 0.96x                 | 1.83x         | 1.77x                   |
+| 60.07          | 0.98x                 | 1.79x         | 2.26x                   |
+| 413.98         | 1.14x                 | 1.97x         | 2.57x                   |
+| 2,046.07       | 1.09x                 | 1.82x         | 2.37x                   |
+
 ---
 
 ## Challenges I Faced

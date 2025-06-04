@@ -4,6 +4,8 @@
 #include <vector>
 #include <cstdint>
 #include <iostream>
+#include <thread>
+
 
 #include "AudioFile.h"
 #include "echo_processor.h"
@@ -167,9 +169,13 @@ void echo::EchoProcessor::processSIMD(audio::AudioFile &audio, int delay_samples
     std::vector<int16_t> left_result;
     std::vector<int16_t> right_result;
     
-    processChannelSSE(audio.left_chan, left_result, delay_samples, decay);
-    processChannelSSE(audio.right_chan, right_result, delay_samples, decay);
-    
+
+    thread ProcessLeftChan(processChannelSSE, std::ref(audio.left_chan), std::ref(left_result), delay_samples, decay);
+    thread ProcessRightChan(processChannelSSE, std::ref(audio.right_chan), std::ref(right_result), delay_samples, decay);
+
+    ProcessLeftChan.join();
+    ProcessRightChan.join();
+
     // move the ownership of the results to be for left / right channels.
     // avoid copying overhead.
     audio.left_chan = std::move(left_result);
