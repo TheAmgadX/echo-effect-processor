@@ -11,6 +11,7 @@ using namespace std;
 
 void audio::AudioFile::read_wav_file_header(ifstream &wavFile, string fname){
     if (!wavFile.is_open()){
+        wavFile.close();
         cerr << "failed to open file: " << fname << "\n";
         return;
     }
