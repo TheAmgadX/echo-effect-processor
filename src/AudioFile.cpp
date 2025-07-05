@@ -23,6 +23,7 @@ void audio::AudioFile::read_wav_file_header(ifstream &wavFile, string fname){
 
     // read the wav header.
     if (!wavFile.read(reinterpret_cast<char *>(&wav), sizeof(WAVFileHeader))){
+        wavFile.close();
         cerr << "Failed to read WAV header.\n";
         return;
     }
@@ -38,7 +39,8 @@ void audio::AudioFile::read_wav_file_header(ifstream &wavFile, string fname){
         // audio format = 1 for PCM
         // bits per sample = 16 as usual
         // num channels = 2 for stereo
-        
+        wavFile.close();
+
         cerr << "Unsupported WAV format (bit depth : 16, audio format: 1, num channels: 2)\n";
         return;
     }
@@ -93,6 +95,7 @@ void audio::AudioFile::store_wav_file(string fname) {
     file.open(fname, ios::binary);
 
     if (!file.is_open()) {
+        file.close();
         cerr << "Failed to open file: " << fname << "\n";
         return;
     }
@@ -108,28 +111,70 @@ void audio::AudioFile::store_wav_file(string fname) {
     };
 
     // RIFF chunk
-    if (fail(write_as_bytes(file, wav.chunk_id, 4))) return;
-    if (fail(write_as_bytes(file, wav.chunk_size, 4))) return;
-    if (fail(write_as_bytes(file, wav.format, 4))) return;
+    if (fail(write_as_bytes(file, wav.chunk_id, 4))) {
+        file.close();
+        return;
+    }
+    if (fail(write_as_bytes(file, wav.chunk_size, 4))) {
+        file.close();
+        return;
+    }
+    if (fail(write_as_bytes(file, wav.format, 4))) {
+        file.close();
+        return;
+    }
 
     // FMT - sub chunk
-    if (fail(write_as_bytes(file, wav.sub_chunk1_id, 4))) return;
-    if (fail(write_as_bytes(file, wav.sub_chunk1_size, 4))) return;
-    if (fail(write_as_bytes(file, wav.audio_format, 2))) return;
-    if (fail(write_as_bytes(file, wav.num_channels, 2))) return;
-    if (fail(write_as_bytes(file, wav.sample_rate, 4))) return;
-    if (fail(write_as_bytes(file, wav.byte_rate, 4))) return;
-    if (fail(write_as_bytes(file, wav.block_align, 2))) return;
-    if (fail(write_as_bytes(file, wav.bits_per_sample, 2))) return;
+    if (fail(write_as_bytes(file, wav.sub_chunk1_id, 4))) {
+        file.close();
+        return;
+    }
+    if (fail(write_as_bytes(file, wav.sub_chunk1_size, 4))) {
+        file.close();
+        return;
+    }
+    if (fail(write_as_bytes(file, wav.audio_format, 2))) {
+        file.close();
+        return;
+    }
+    if (fail(write_as_bytes(file, wav.num_channels, 2))) {
+        file.close();
+        return;
+    }
+    if (fail(write_as_bytes(file, wav.sample_rate, 4))) {
+        file.close();
+        return;
+    }
+    if (fail(write_as_bytes(file, wav.byte_rate, 4))) {
+        file.close();
+        return;
+    }
+    if (fail(write_as_bytes(file, wav.block_align, 2))) {
+        file.close();
+        return;
+    }
+    if (fail(write_as_bytes(file, wav.bits_per_sample, 2))) {
+        file.close();
+        return;
+    }
 
     // DATA - sub chunk
-    if (fail(write_as_bytes(file, wav.sub_chunk2_id, 4))) return;
-    if (fail(write_as_bytes(file, wav.sub_chunk2_size, 4))) return;
+    if (fail(write_as_bytes(file, wav.sub_chunk2_id, 4))) {
+        file.close();
+        return;
+    }
+    if (fail(write_as_bytes(file, wav.sub_chunk2_size, 4))) {
+        file.close();
+        return;
+    }
 
     // Write audio sample data
     file.write(reinterpret_cast<const char*>(audio_data.data()), audio_data.size() * sizeof(uint16_t));
 
-    if(fail(file.fail())) return;
+    if(fail(file.fail())) {
+        file.close();
+        return;
+    }
 
 
     file.close();
